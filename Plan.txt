@@ -1,0 +1,14 @@
+Stages of the code optimisation for aggregating JSON data with the values. 
+
+1. CPU reads JSON file and read it in one go and then parse and flatten the whole data. Traverse the data one by one and extract the values and store in a hash with count and then output the result of the aggregation. 
+
+2. CPU reads JSON file and read it in one go. then use multi threading and give the chunks to all the threads. Each thread operation will be to parse and flatten its chunk and traverse that chunk and extract the values and store it it in local hash, after this, returns the hash in form of pair to the main thread. after all threads execution, main thread will join the result and output the result of the aggregation. 
+
+3. CPU reads JSON file and read it in one go, then use the multi threading and give the chunks to all the threads, each thread operation is to parse and flatten its chunk and put the flatten chunk in a file. GPU reads the files and perform the hashing and then aggregate on the hash, and writes the data into a output file. 
+
+4. CPU reads JSON file and read it in one go, divide the files into chunks and give it to the threads. each thread will parse and flatten its chunk and put the data into the queue continuously, GPU now reads this queue one by one and perform the hashing and then aggregate on the hash, once whole operation is complete then it writes the data into a output file. 
+
+5. CPU reads JSON file and read it in one go, divide the files into chunks and give it to the threads. each thread will parse and flatten its chunk and put the data into the queue continuously, GPU has multiple threads which all will be listening to this queue and read this queue and perform the hashing and then store it in a buffer. One operation is done, the GPU will perform aggregation on the buffer.finally it writes the data into a output file. 
+
+
+Q I/O dependent on the CPU/GPU?
