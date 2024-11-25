@@ -21,8 +21,29 @@ using namespace folly;
 
 using json = nlohmann::json;
 
+//TODO: change the access modifiers
 class JsonHelperClass {
 public:
+    // Chunking an array of dictionaries and return a vector with each chunk
+    std::vector<json> chunkJSONArray(const json& inputData, int numChunks){
+        std::vector<json>> jsonChunks;
+        size_t totalSize = inputData.size(); // TODO: check for totalSize
+        size_t chunkSize = totalSize / numChunks; // no. of elements in each chunk
+
+        size_t start = 0;
+        while(start < totalSize){
+            size_t end = (start + chunkSize < totalSize) ? (start + chunkSize) : totalSize;
+            json chunk = json::array();
+            for(size_t i = start; i < end; i++){
+                chunk.push_back(inputData[i]);
+            }
+            jsonChunks.push_back(chunk);
+            start = end;
+        }
+
+        return jsonChunks;
+    }
+
     // Function to flatten a nested JSON structure
     void flattenJSON(const json& input, json& output, const std::string& prefix = "") {
         for (auto it = input.begin(); it != input.end(); ++it) {
@@ -34,7 +55,8 @@ public:
         }
     }
 
-    void process_input_and_queue(const json& inputData, const mqd_t& mq) {
+    void process_input_and_queue(const json& inputData, const mqd_t& mq, int& thread_id) {
+        cout << "Thread " + thread_id + "is running..." << endl;
         // process and flatten the whole json input
         json flattenedData;
         flattenJSON(inputData, flattenedData);
@@ -51,7 +73,7 @@ public:
             }
         }
         else{
-            throw std::runtime_error("Couldn't flatten the data for thread: " + std::this_thread.get_id());
+            throw std::runtime_error("Couldn't flatten the data for thread: " + thread_id);
         }
 
     }
@@ -94,18 +116,25 @@ int main(int argc, char *argv[]) try {
     }
 
     // 2. Parsing the file into a JSON object
-    json inputData;
+    json inputData; //TODO: check if this is an array of dictionaries
     inputFile >> inputData;
     inputFile.close();
 
-    // 3. Chunk data before assigning to thread
+//    2.5 Checking and converting json obj into json array
+//    if(!inputData.is_array()){
+//        std::cerr << "Input JSON is not an array. We are converting it and wrapping into an array." << std::endl;
+//        inputData = json::array({inputData}); //json j_list_of_pairs = json::array({ {"one", 1}, {"two", 2} });
+//    }
 
-    // 4. Create threads and assign data
+    // 3. Divide the JSON array into chunks
+    std::vector<json> chunks = chunkJSONArray(inputData, 10); //TODO: remove hardcoded numChunks = numThreads = 10
 
-    //TODO: change number of threads, for now hard coded
+    // 4. Create threads and assign chunks. Using a logical thread id just for logging purpose
     std::<vector<std::thread>>threads;
-    for(int i = 1; i <= 10; i++){
-        threads.push_back(new std::thread(process_input_and_queue, i));
+    for(int i = 1; i <= 10; i++){ //TODO: change number of threads, for now hard coded.
+        //Using emplace_back helps create thread directly in the vector, instead of moving it after creating
+        //args are address of functions (ptrs to fns)
+        threads.emplace_back(&JsonHelperClass::process_input_and_queue, &jsonHelper, std::ref(chunks[i]), std:ref(mq), i);
     }
 
     // 5. Join threads
@@ -114,6 +143,7 @@ int main(int argc, char *argv[]) try {
     }
 
     //TODO: closing and unlinking msg_queue
+
 }
 
 
