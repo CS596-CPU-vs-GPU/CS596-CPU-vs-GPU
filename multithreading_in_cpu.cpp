@@ -12,10 +12,13 @@
 #include <sys/stat.h>    /* For mode constants */
 #include <mqueue.h>      /* For message queue functions */
 #include <unistd.h>
+#include <mutex>
 
 #define QUEUE_NAME  "/my_queue"
 #define MAX_SIZE    1024
 #define MSG_STOP    "exit"
+
+std::mutex mq_mutex;
 
 using namespace folly;
 
@@ -24,10 +27,10 @@ using json = nlohmann::json;
 //TODO: change the access modifiers
 class JsonHelperClass {
 public:
-    // Chunking an array of dictionaries and return a vector with each chunk
+    // Chunking an list of dictionaries and return a vector with each chunk
     std::vector<json> chunkJSONArray(const json& inputData, int numChunks){
         std::vector<json>> jsonChunks;
-        size_t totalSize = inputData.size(); // TODO: check for totalSize
+        size_t totalSize = inputData.size();
         size_t chunkSize = totalSize / numChunks; // no. of elements in each chunk
 
         size_t start = 0;
@@ -62,18 +65,19 @@ public:
         flattenJSON(inputData, flattenedData);
 
         // send the flattened json as a string into the msg queue
-        //TODO: handle synchronization
         if(flattenedData != nullptr){
+            //Critical section: lock mutex
+            std::lock_guard<std::mutex> lock(mq_mutex);
             for(const auto& item: flattenedData){
                 std::string res = item.str();
                 if(mq_send(mq, res.c_str(), MAX_SIZE, 0) == -1){
-                    perror("mq_send failed");
+                    perror("mq_send failed for thread " + std::to_string(thread_id));
                     exit(1);
                 }
             }
         }
         else{
-            throw std::runtime_error("Couldn't flatten the data for thread: " + thread_id);
+            throw std::runtime_error("Couldn't flatten the data for thread: " + std::to_string(thread_id));
         }
 
     }
@@ -90,7 +94,7 @@ public:
         // Create or open the message queue
         mqd_t mq = mq_open(QUEUE_NAME, O_CREAT | O_WRONLY, 0644, &attr);
         if (mq == (mqd_t)-1) {
-            perror("mq_open");
+            perror("Couldn't create a msg queue");
             exit(1);
         }
         return mq;
@@ -116,15 +120,16 @@ int main(int argc, char *argv[]) try {
     }
 
     // 2. Parsing the file into a JSON object
-    json inputData; //TODO: check if this is an array of dictionaries
+    json inputData;
     inputFile >> inputData;
     inputFile.close();
 
-//    2.5 Checking and converting json obj into json array
-//    if(!inputData.is_array()){
-//        std::cerr << "Input JSON is not an array. We are converting it and wrapping into an array." << std::endl;
-//        inputData = json::array({inputData}); //json j_list_of_pairs = json::array({ {"one", 1}, {"two", 2} });
-//    }
+    //Check for inputData being a json array
+    if(!inputData.is_array() && inputData.is_object()){
+        std::cout << "Input JSON is not an array but a single JSON. We are converting wrapping into an array of one element." << std::endl;
+        inputData = json::array({inputData});
+    }
+    //TODO: check for invalid json
 
     // 3. Divide the JSON array into chunks
     std::vector<json> chunks = chunkJSONArray(inputData, 10); //TODO: remove hardcoded numChunks = numThreads = 10
@@ -134,7 +139,7 @@ int main(int argc, char *argv[]) try {
     for(int i = 1; i <= 10; i++){ //TODO: change number of threads, for now hard coded.
         //Using emplace_back helps create thread directly in the vector, instead of moving it after creating
         //args are address of functions (ptrs to fns)
-        threads.emplace_back(&JsonHelperClass::process_input_and_queue, &jsonHelper, std::ref(chunks[i]), std:ref(mq), i);
+        threads.emplace_back(&JsonHelperClass::process_input_and_queue, &jsonHelper, std::ref(chunks[i-1]), std:ref(mq), i);
     }
 
     // 5. Join threads
@@ -144,6 +149,7 @@ int main(int argc, char *argv[]) try {
 
     //TODO: closing and unlinking msg_queue
 
+    return 0;
 }
 
 
