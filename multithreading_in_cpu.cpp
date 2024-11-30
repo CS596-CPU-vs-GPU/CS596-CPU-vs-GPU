@@ -24,7 +24,7 @@ using json = nlohmann::json;
 //TODO: change the access modifiers
 class JsonHelperClass {
 public:
-    // Chunking an array of dictionaries and return a vector with each chunk
+    // Chunking an list of dictionaries and return a vector with each chunk
     std::vector<json> chunkJSONArray(const json& inputData, int numChunks){
         std::vector<json>> jsonChunks;
         size_t totalSize = inputData.size(); // TODO: check for totalSize
@@ -120,11 +120,12 @@ int main(int argc, char *argv[]) try {
     inputFile >> inputData;
     inputFile.close();
 
-//    2.5 Checking and converting json obj into json array
-//    if(!inputData.is_array()){
-//        std::cerr << "Input JSON is not an array. We are converting it and wrapping into an array." << std::endl;
-//        inputData = json::array({inputData}); //json j_list_of_pairs = json::array({ {"one", 1}, {"two", 2} });
-//    }
+    //Check for inputData being a json array
+    if(!inputData.is_array() && inputData.is_object()){
+        std::cout << "Input JSON is not an array but a single JSON. We are converting wrapping into an array of one element." << std::endl;
+        inputData = json::array({inputData});
+    }
+    //TODO: check for invalid json
 
     // 3. Divide the JSON array into chunks
     std::vector<json> chunks = chunkJSONArray(inputData, 10); //TODO: remove hardcoded numChunks = numThreads = 10
