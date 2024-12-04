@@ -34,7 +34,7 @@ Roofline analysis provides insights into whether the hashing and aggregation tas
 
 It will help us identify whether the bottleneck lies in:
 - **Memory Bandwidth:** If the CPU-GPU data transfer or GPU memory access is limiting performance.
--** Compute Performance:** If the GPU is underutilized, leaving computational resources idle.
+- ** Compute Performance:** If the GPU is underutilized, leaving computational resources idle.
 
 ### How roofline analysis will be performed:
 
