@@ -1,4 +1,4 @@
-# Chunk-Based JSON Parsing and GPU-Accelerated Data Aggregation and Hashing System
+# Chunk-Based JSON Parsing System with GPU-Accelerated Aggregation and Hashing
 
 ## Problem Overview
 
