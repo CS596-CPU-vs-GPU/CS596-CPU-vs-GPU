@@ -2,9 +2,9 @@
 
 ## Problem Overview
 
-Managing large JSON datasets efficiently is critical in scenarios where computational resources like CPU and GPU are utilized to handle complex workloads. The challenge lies in optimizing data parsing, flattening, aggregation, and output through multi-threading and parallel computing. JSON's widespread use in fields like data analytics, machine learning, real-time systems, and cloud applications makes this optimization crucial as traditional single-threaded methods fall short with increasing data complexity.
+In situations where the dataset is huge and computational resources (CPU and GPU) are utilised to manage the workload effectively, the challenge is to optimise the processing and aggregation of JSON data as it is widely used in contemporary applications as a structured data representation standard and the requirement is to manage massive amounts of JSON data effectively is very pertinent. Development teams must prioritise optimisation solutions since traditional single-threaded, CPU-only processing methods create bottlenecks as datasets get larger and more complicated.
 
-This problem is highly relevant to real-world applications, including big data analytics, machine learning pipelines, real-time monitoring systems, ETL workflows, and distributed log processing. By optimizing data aggregation, businesses can enhance speed, scalability, and reliability, addressing challenges across industries such as technology, e-commerce, healthcare, and finance.
+This problem is highly relevant to real-world applications, including big data analytics, machine learning pipelines, real-time monitoring systems, and distributed log processing. By optimizing data aggregation, businesses can enhance speed, scalability, and reliability, addressing challenges across industries such as technology, e-commerce, healthcare, and finance.
 
 ## Method proposed
 
