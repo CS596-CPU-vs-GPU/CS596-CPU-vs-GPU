@@ -22,7 +22,7 @@ Expected Level of Optimisation: High, includes file I/O overhead but reduces CPU
 - CPU Threads with Streaming to GPU: JSON chunks are processed by CPU threads, which then continually stream the flattened data into a queue. After reading the queue, the GPU aggregates and hashes the data and outputs the results.
 Expected Level of Optimisation: Higher, it creates a real-time data stream between the CPU and GPU and eliminates file I/O overhead.
 
-- Fully Parallel CPU-GPU Integration: Data is parsed and streamed into a queue by CPU threads, and then processed in parallel by several GPU threads. The GPU buffer is used for aggregation, and the output is where the results are written.
+- Fully Parallel CPU-GPU Integration: Data is parsed and streamed into a queue by CPU threads and then processed in parallel by several GPU threads. The GPU buffer is used for aggregation, and the output is where the results are written.
 Expected Level of Optimisation: Maximum, it enables the fastest and most effective processing by making full use of CPU and GPU parallelism.
 
 ### Flow Diagram
@@ -32,10 +32,9 @@ Expected Level of Optimisation: Maximum, it enables the fastest and most effecti
 
 Roofline analysis provides insights into whether the hashing and aggregation tasks are compute-bound or memory-bound. This is crucial in fine-tuning the CPU-GPU integration, optimizing CUDA kernels, or modifying memory access patterns to better utilize the hardware.
 
-It will help us in identifying whether the bottleneck lies in:
-
-Memory Bandwidth: If the CPU-GPU data transfer or GPU memory access is limiting performance.
-Compute Performance: If the GPU is underutilized, leaving computational resources idle.
+It will help us identify whether the bottleneck lies in:
+- **Memory Bandwidth:** If the CPU-GPU data transfer or GPU memory access is limiting performance.
+-** Compute Performance:** If the GPU is underutilized, leaving computational resources idle.
 
 ### How roofline analysis will be performed:
 
