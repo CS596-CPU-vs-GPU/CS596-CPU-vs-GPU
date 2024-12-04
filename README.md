@@ -27,7 +27,8 @@ Expected Level of Optimisation: Higher, it creates a real-time data stream betwe
 - Fully Parallel CPU-GPU Integration: Data is parsed and streamed into a queue by CPU threads, and then processed in parallel by several GPU threads. The GPU buffer is used for aggregation, and the output is where the results are written.
 Expected Level of Optimisation: Maximum, it enables the fastest and most effective processing by making full use of CPU and GPU parallelism.
 
-
+### Flow Diagram
+![Alt text](Flow_Diagram.png)
 
 ## Roofline Analysis
 
