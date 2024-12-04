@@ -2,11 +2,9 @@
 
 ## Problem Overview
 
-In situations where the dataset is huge and computational resources (CPU and GPU) are utilised to manage the workload effectively, the challenge is to optimise the processing and aggregation of JSON data. The difficulty lies in creating a process that uses multi-threading and parallel computing to optimise the efficiency of data parsing, flattening, aggregation, and output production.
+Managing large JSON datasets efficiently is critical in scenarios where computational resources like CPU and GPU are utilized to handle complex workloads. The challenge lies in optimizing data parsing, flattening, aggregation, and output through multi-threading and parallel computing. JSON's widespread use in fields like data analytics, machine learning, real-time systems, and cloud applications makes this optimization crucial as traditional single-threaded methods fall short with increasing data complexity.
 
-JSON data is widely used in contemporary applications as a structured data representation standard. In fields like data analytics, machine learning, real-time processing systems, and cloud-based applications, the requirement to manage massive amounts of JSON data effectively is very pertinent. Development teams must prioritise optimisation solutions since traditional single-threaded, CPU-only processing methods create bottlenecks as datasets get larger and more complicated.
-
-This problem is relevant because it may be used to a variety of real-world situations where processing huge amounts of JSON data efficiently is necessary. This includes machine learning pipelines where JSON is a common data format, real-time systems like fraud detection and anomaly monitoring, and big data analytics for extracting insights from enormous datasets. Additionally, it is essential for ETL pipelines that prepare data for business intelligence, log processing, and distributed system monitoring. Businesses may improve speed, scalability, and reliability by streamlining data aggregation operations, tackling issues that are prevalent in sectors including technology, e-commerce, healthcare, and finance.
+This problem is highly relevant to real-world applications, including big data analytics, machine learning pipelines, real-time monitoring systems, ETL workflows, and distributed log processing. By optimizing data aggregation, businesses can enhance speed, scalability, and reliability, addressing challenges across industries such as technology, e-commerce, healthcare, and finance.
 
 ## Method proposed
 
@@ -47,7 +45,7 @@ We will start by collecting key metrics such as FLOPs (floating-point operations
 
 In this project, the GPU plays a crucial role in accelerating the data aggregation process by offloading computationally intensive tasks from the CPU. GPUs are designed for parallelism, with thousands of smaller cores capable of handling multiple operations simultaneously. Once the CPU parses and flattens the JSON data, the GPU takes over the hashing and aggregation tasks, which involve repetitive calculations that can be parallelized effectively. By leveraging GPU acceleration, the project reduces latency, enhances throughput, and handles larger datasets more efficiently than CPU-only processing.
 
-GPU multithreading is particularly advantageous in this context. Each GPU thread processes a portion of the data independently, allowing simultaneous execution of hashing and aggregation tasks. This parallel processing ensures that even with streaming data from the CPU, the GPU can keep up with the workload in real time. Multiple GPU threads listen to the data queue, process incoming chunks, and store results in a buffer. Once the aggregation is complete, the GPU writes the output to a file, completing the process swiftly. This approach maximizes hardware utilization, making it ideal for real-time systems and large-scale data pipelines.
+GPU multithreading allows each thread to process data chunks independently, ensuring real-time processing even with continuous data streams from the CPU. Multiple GPU threads read from the data queue, process chunks in parallel, and store results in a buffer for aggregation. This approach optimizes hardware utilization, making it ideal for real-time systems and large-scale pipelines.
 
 ## Future Work
 
