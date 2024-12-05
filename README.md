@@ -38,7 +38,7 @@ It will help us identify whether the bottleneck lies in:
 
 ### How roofline analysis will be performed:
 
-We will start by collecting key metrics such as FLOPs (floating-point operations per second), memory bandwidth, and will use tools like NVIDIA Nsight Compute for profiling GPU tasks (e.g., hashing and aggregation) and Intel Advisor for CPU tasks (e.g., parsing and flattening JSON). We will plot the theoretical roofline of the hardware, including the compute and memory bandwidth limits, and overlay the actual performance of the project tasks to identify whether they are memory-bound or compute-bound. 
+We will start by collecting key metrics such as FLOPs (floating-point operations per second), thread utilization, and memory bandwidth usage, and will use tools like NVIDIA Nsight Compute for profiling GPU tasks (e.g., hashing and aggregation) and Intel Advisor for CPU tasks (e.g., parsing and flattening JSON). We will plot the theoretical roofline of the hardware, including the compute and memory bandwidth limits, and overlay the actual performance of the project tasks to identify whether they are memory-bound or compute-bound. 
 
 ## Advantages of GPU utilisation
 
