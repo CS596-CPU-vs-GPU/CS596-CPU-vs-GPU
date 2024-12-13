@@ -3,7 +3,7 @@
 #include <fstream>
 #include <nlohmann/json.hpp>
 #include <cstring>
-
+#include <chrono>
 
 using json = nlohmann::json;
 
@@ -66,19 +66,20 @@ public:
     }
 
     // Function to process the flattened JSON and perform aggregation using MurmurHash
-    void processFlattenedJSON(const json& flattenedData, std::unordered_map<std::string, int, MurmurHash>& aggregationMap) {
+    void processFlattenedJSON(const json& flattenedData, std::unordered_map<std::string, int, MurmurHash>& aggregationMap, size_t& totalRecords) {
         for (auto it = flattenedData.begin(); it != flattenedData.end(); ++it) {
             // Extract the value as a string
             std::string value = it.value().dump(); // Serialize the value to string
 
             // Increment count in the hash map
             aggregationMap[value]++;
+            totalRecords++;
         }
     }
 };
 
 int main(int argc, char* argv[]) {
-//    try {
+    try {
         std::cout << "Starting CPU-only JSON processing with MurmurHash..." << std::endl;
 
         JsonProcessor jsonProcessor;
@@ -115,18 +116,29 @@ int main(int argc, char* argv[]) {
 
         // Perform aggregation using MurmurHash
         std::unordered_map<std::string, int, MurmurHash> aggregationMap;
+        size_t totalRecords = 0;
+
+        // Measure execution time
+        auto start_time = std::chrono::high_resolution_clock::now();
+
         jsonProcessor.processFlattenedJSON(flattenedData, aggregationMap);
+
+        auto end_time = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> execution_time = end_time - start_time;
 
         // Output the aggregation results
         std::cout << "Aggregated Results:" << std::endl;
         for (const auto& pair : aggregationMap) {
             std::cout << pair.first << ": " << pair.second << std::endl;
         }
-//
-//    } catch (const std::exception& ex) {
-//        std::cerr << "Error: " << ex.what() << std::endl;
-//        return 1;
-//    }
+        std::cout << "Total Records Processed: " << totalRecords << std::endl;
+        std::cout << "CPU Execution Time: " << execution_time.count() << " seconds" << std::endl;
+
+
+    } catch (const std::exception& ex) {
+        std::cerr << "Error: " << ex.what() << std::endl;
+        return 1;
+    }
 
     return 0;
 }
