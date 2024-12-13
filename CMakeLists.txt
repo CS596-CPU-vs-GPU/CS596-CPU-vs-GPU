@@ -6,7 +6,7 @@ project(CS596-CPU-vs-GPU)
 set(CMAKE_CXX_STANDARD 17)
 
 # Enable optimization and debug symbols for Intel VTune analysis
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -g -qopenmp")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -g -fopenmp")
 
 # Add executable for CPU-only processing
 add_executable(CPU_only_processing CPU_only_processing.cpp)
@@ -22,3 +22,5 @@ target_link_libraries(multithreading_in_cpu PRIVATE Threads::Threads)
 
 # Include directories for dependencies (adjust path as necessary)
 include_directories(${PROJECT_SOURCE_DIR}/include)
+
+
