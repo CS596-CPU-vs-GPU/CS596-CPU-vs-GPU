@@ -93,8 +93,6 @@ Highlights from GPU Performance:
 
 - Scalability and Efficiency: GPUs are inherently designed for high degrees of parallelism. This attribute was leveraged in our project to handle multiple operations simultaneously, a critical requirement for applications involving real-time data analysis and decision-making.
 
-- Real-time Processing: GPU multithreading facilitated the handling of continuous data streams from the CPU, ensuring that each thread could process data chunks independently without delay. This was crucial for maintaining high throughput rates and reducing latency, which are vital for real-time systems and large-scale data pipelines.
-
 ## Challenges We Faced
 
 Initially, we planned to perform a roofline analysis to better understand the compute versus memory-bound characteristics of our tasks. However, this analysis could not be completed due to technical issues encountered with the profiling tools on our Windows systems. Specifically, we faced software bugs: some unexpected crashes and bugs in the profiling software hindered our ability to gather consistent data across all computational loads.
