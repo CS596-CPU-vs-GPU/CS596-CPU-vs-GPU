@@ -64,7 +64,7 @@ The benchmarking data clearly shows the advantages of GPU acceleration in handli
 
 - **CPU Times:** As the data volume increased, the time taken by the CPU to aggregate data rose significantly, with the largest dataset (10GB) requiring approximately 150 seconds to process 105.56 million records.
   <img src="CPU_processing_time.png" alt="CPU Processing Time" width="500" height="300">
-- **GPU Times:** In stark contrast, the GPU demonstrated superior performance, processing the same 10GB dataset in just 4.42 seconds.
+- **GPU Times:** In stark contrast, the GPU demonstrated superior performance, processing the same 10GB dataset in just 4.42 seconds. 
   <img src="GPU_processing_time.png" alt="GPU Processing Time" width="500" height="300">
 
 This substantial reduction in processing time illustrates the GPU's ability to handle parallel computations far more effectively than a CPU, particularly when dealing with large volumes of data.
