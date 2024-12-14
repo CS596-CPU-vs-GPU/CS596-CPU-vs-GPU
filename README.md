@@ -50,6 +50,12 @@ The implementation of the Chunk-Based JSON Parsing System with GPU-Accelerated A
 
 The phased approach not only facilitated incremental improvements in handling large-scale JSON data but also provided clear insights into the benefits of integrating CPU and GPU for data-intensive applications. Each phase was designed to iteratively increase the complexity and efficiency of the system, ultimately leading to a robust solution capable of handling massive datasets with high performance.
 
+### Dependencies:
+- CMake (v3.10+)
+- CUDA Toolkit
+- nlohmann/json (for JSON parsing)
+- POSIX Threads (for multithreading)
+
 ## Result and Analysis
 
 This section presents the results obtained from the implementation of our Chunk-Based JSON Parsing System with GPU-Accelerated Aggregation and Hashing, highlighting the performance enhancements achieved through our multi-phased optimization approach.
@@ -63,8 +69,11 @@ Our benchmark tests were conducted across several data sizes, from 1MB to 10GB, 
 The benchmarking data clearly shows the advantages of GPU acceleration in handling large-scale data aggregation:
 
 - **CPU Times:** As the data volume increased, the time taken by the CPU to aggregate data rose significantly, with the largest dataset (10GB) requiring approximately 150 seconds to process 105.56 million records.
+
   <img src="CPU_processing_time.png" alt="CPU Processing Time" width="500" height="300">
-- **GPU Times:** In stark contrast, the GPU demonstrated superior performance, processing the same 10GB dataset in just 4.42 seconds. 
+  
+- **GPU Times:** In stark contrast, the GPU demonstrated superior performance, processing the same 10GB dataset in just 4.42 seconds.
+  
   <img src="GPU_processing_time.png" alt="GPU Processing Time" width="500" height="300">
 
 This substantial reduction in processing time illustrates the GPU's ability to handle parallel computations far more effectively than a CPU, particularly when dealing with large volumes of data.
@@ -77,9 +86,14 @@ The provided graphs further emphasize the disparity in performance between CPU a
 
 ## Advantages of GPU utilisation
 
-In this project, the GPU plays a crucial role in accelerating the data aggregation process by offloading computationally intensive tasks from the CPU. GPUs are designed for parallelism, with thousands of smaller cores capable of handling multiple operations simultaneously. Once the CPU parses and flattens the JSON data, the GPU takes over the hashing and aggregation tasks, which involve repetitive calculations that can be parallelized effectively. By leveraging GPU acceleration, the project reduces latency, enhances throughput, and handles larger datasets more efficiently than CPU-only processing.
+In the context of the results obtained from our system's implementation, the GPU's role in accelerating data aggregation processes was demonstrated to be highly effective. The benchmarking data shows the substantial impact of GPU usage in reducing computation times, particularly when dealing with large data volumes.
 
-GPU multithreading allows each thread to process data chunks independently, ensuring real-time processing even with continuous data streams from the CPU. Multiple GPU threads read from the data queue, process chunks in parallel, and store results in a buffer for aggregation. This approach optimizes hardware utilization, making it ideal for real-time systems and large-scale pipelines.
+Highlights from GPU Performance:
+- Significant Reduction in Processing Time: As evidenced in the comparative analysis of CPU versus GPU computation, the GPU was capable of processing up to 10GB of data in just 4.42 seconds, compared to the CPU's 150 seconds for the same volume. This not only illustrates the GPU's superior parallel processing capabilities but also highlights its efficiency in handling large-scale datasets.
+
+- Scalability and Efficiency: GPUs are inherently designed for high degrees of parallelism. This attribute was leveraged in our project to handle multiple operations simultaneously, a critical requirement for applications involving real-time data analysis and decision-making.
+
+- Real-time Processing: GPU multithreading facilitated the handling of continuous data streams from the CPU, ensuring that each thread could process data chunks independently without delay. This was crucial for maintaining high throughput rates and reducing latency, which are vital for real-time systems and large-scale data pipelines.
 
 ## Future Work
 
