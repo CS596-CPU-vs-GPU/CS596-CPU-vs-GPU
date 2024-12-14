@@ -95,6 +95,10 @@ Highlights from GPU Performance:
 
 - Real-time Processing: GPU multithreading facilitated the handling of continuous data streams from the CPU, ensuring that each thread could process data chunks independently without delay. This was crucial for maintaining high throughput rates and reducing latency, which are vital for real-time systems and large-scale data pipelines.
 
+## Challenges We Faced
+
+Initially, we planned to perform a roofline analysis to better understand the compute versus memory-bound characteristics of our tasks. However, this analysis could not be completed due to technical issues encountered with the profiling tools on our Windows systems. Specifically, we faced software bugs: some unexpected crashes and bugs in the profiling software hindered our ability to gather consistent data across all computational loads.
+
 ## Future Work
 
 Future work for this project could involve incorporating distributed processing using multiple GPUs or a cluster of CPUs and GPUs could enable handling even larger datasets. Investigating memory optimization strategies, such as using asynchronous data transfers, could reduce latency further.
