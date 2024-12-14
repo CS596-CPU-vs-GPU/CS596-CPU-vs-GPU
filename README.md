@@ -26,36 +26,54 @@ Expected Level of Optimisation: Higher, it creates a real-time data stream betwe
 Expected Level of Optimisation: Maximum, it enables the fastest and most effective processing by making full use of CPU and GPU parallelism.
 
 ### Flow Diagram
+
 ![Alt text](Flow_Diagram.png)
 
 ## Implementation
+
 The implementation of the Chunk-Based JSON Parsing System with GPU-Accelerated Aggregation and Hashing was methodically divided into phases, each tailored to escalate the level of optimization progressively. Here are the specifics of the implementation carried out in different files across these phases:
 
 ### Single-Threaded CPU Processing:
+
 - **File**: CPU_only_processing.cpp
 - This initial phase involved straightforward, single-threaded processing of JSON data using the CPU. It served as a baseline by processing the entire JSON file serially to parse, flatten, and aggregate the data.
 
 ### CPU for Parsing and GPU for Aggregation:
+
 - **Files**: cpu_without_multithreading.cpp and GPU_aggregation_without_threads.cu
 - In this setup, the CPU is responsible for parsing the JSON data into manageable chunks which are then handed over to the GPU for efficient aggregation. This phase integrates basic GPU utilization to enhance data handling efficiency.
 
 ### Fully Parallel CPU-GPU Integration:
+
 - **Files**: multithreading_in_cpu.cpp and GPU_aggregation_threads.cu
 - Represents the culmination of the project's optimization efforts. This phase employs multiple CPU threads for parsing and multiple GPU threads for parallel data processing and aggregation. It maximizes the concurrency model by using both CPU and GPU resources efficiently.
 
 The phased approach not only facilitated incremental improvements in handling large-scale JSON data but also provided clear insights into the benefits of integrating CPU and GPU for data-intensive applications. Each phase was designed to iteratively increase the complexity and efficiency of the system, ultimately leading to a robust solution capable of handling massive datasets with high performance.
 
-## Roofline Analysis
+## Result and Analysis
 
-Roofline analysis provides insights into whether the hashing and aggregation tasks are compute-bound or memory-bound. This is crucial in fine-tuning the CPU-GPU integration, optimizing CUDA kernels, or modifying memory access patterns to better utilize the hardware.
+This section presents the results obtained from the implementation of our Chunk-Based JSON Parsing System with GPU-Accelerated Aggregation and Hashing, highlighting the performance enhancements achieved through our multi-phased optimization approach.
 
-It will help us identify whether the bottleneck lies in:
-- **Memory Bandwidth:** If the CPU-GPU data transfer or GPU memory access is limiting performance.
-- **Compute Performance:** If the GPU is underutilized, leaving computational resources idle.
+### Benchmarking Results
 
-### How roofline analysis will be performed:
+Our benchmark tests were conducted across several data sizes, from 1MB to 10GB, to evaluate the performance of CPU versus GPU computations. The objective was to determine the effective scalability and efficiency of our system under different computational loads.
 
-We will start by collecting key metrics such as FLOPs (floating-point operations per second), thread utilization, and memory bandwidth usage, and will use tools like NVIDIA Nsight Compute for profiling GPU tasks (e.g., hashing and aggregation) and Intel Advisor for CPU tasks (e.g., parsing and flattening JSON). We will plot the theoretical roofline of the hardware, including the compute and memory bandwidth limits, and overlay the actual performance of the project tasks to identify whether they are memory-bound or compute-bound. 
+#### CPU vs GPU Computation Times
+
+The benchmarking data clearly shows the advantages of GPU acceleration in handling large-scale data aggregation:
+
+- **CPU Times:** As the data volume increased, the time taken by the CPU to aggregate data rose significantly, with the largest dataset (10GB) requiring approximately 150 seconds to process 105.56 million records.
+  <img src="CPU_processing_time.png" alt="CPU Processing Time" width="500" height="300">
+- **GPU Times:** In stark contrast, the GPU demonstrated superior performance, processing the same 10GB dataset in just 4.42 seconds.
+  <img src="GPU_processing_time.png" alt="GPU Processing Time" width="500" height="300">
+
+This substantial reduction in processing time illustrates the GPU's ability to handle parallel computations far more effectively than a CPU, particularly when dealing with large volumes of data.
+
+#### Graphical Representation
+
+![Alt text](graph.png)
+
+The provided graphs further emphasize the disparity in performance between CPU and GPU. For instance, with a 10GB data load, the GPU was able to complete the aggregation nearly 34 times faster than the CPU. These results validate our approach of integrating GPU computing to tackle the challenges of large-scale data processing in modern applications.
 
 ## Advantages of GPU utilisation
 
