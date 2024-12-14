@@ -28,6 +28,23 @@ Expected Level of Optimisation: Maximum, it enables the fastest and most effecti
 ### Flow Diagram
 ![Alt text](Flow_Diagram.png)
 
+## Implementation
+The implementation of the Chunk-Based JSON Parsing System with GPU-Accelerated Aggregation and Hashing was methodically divided into phases, each tailored to escalate the level of optimization progressively. Here are the specifics of the implementation carried out in different files across these phases:
+
+### Single-Threaded CPU Processing:
+- **File**: CPU_only_processing.cpp
+- This initial phase involved straightforward, single-threaded processing of JSON data using the CPU. It served as a baseline by processing the entire JSON file serially to parse, flatten, and aggregate the data.
+
+### CPU for Parsing and GPU for Aggregation:
+- **Files**: cpu_without_multithreading.cpp and GPU_aggregation_without_threads.cu
+- In this setup, the CPU is responsible for parsing the JSON data into manageable chunks which are then handed over to the GPU for efficient aggregation. This phase integrates basic GPU utilization to enhance data handling efficiency.
+
+### Fully Parallel CPU-GPU Integration:
+- **Files**: multithreading_in_cpu.cpp and GPU_aggregation_threads.cu
+- Represents the culmination of the project's optimization efforts. This phase employs multiple CPU threads for parsing and multiple GPU threads for parallel data processing and aggregation. It maximizes the concurrency model by using both CPU and GPU resources efficiently.
+
+The phased approach not only facilitated incremental improvements in handling large-scale JSON data but also provided clear insights into the benefits of integrating CPU and GPU for data-intensive applications. Each phase was designed to iteratively increase the complexity and efficiency of the system, ultimately leading to a robust solution capable of handling massive datasets with high performance.
+
 ## Roofline Analysis
 
 Roofline analysis provides insights into whether the hashing and aggregation tasks are compute-bound or memory-bound. This is crucial in fine-tuning the CPU-GPU integration, optimizing CUDA kernels, or modifying memory access patterns to better utilize the hardware.
