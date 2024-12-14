@@ -9,10 +9,12 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -g -fopenmp")
 
 # Add executable for CPU-only processing
-add_executable(CPU_only_processing CPU_only_processing.cpp)
+add_executable(CPU_only_processing CPU_only_processing.cpp
+        cpu_without_multithreading.cpp)
 
 # Add executable for CPU multithreading processing
-add_executable(multithreading_in_cpu multithreading_in_cpu.cpp)
+add_executable(multithreading_in_cpu multithreading_in_cpu.cpp
+        cpu_without_multithreading.cpp)
 
 # Find Intel threading libraries if applicable
 find_package(Threads REQUIRED)
