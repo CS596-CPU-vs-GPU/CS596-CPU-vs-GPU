@@ -50,20 +50,29 @@ uint32_t MurmurHash3_32(const void* key, size_t len, uint32_t seed) {
 }
 
 int main() {
-    std::ifstream file("input_datasets.json");
-    if (!file.is_open()) {
-        std::cerr << "Unable to open file: input_datasets.json" << "\n";
-        return 1;
+    mqd_t mq;
+    mq = mq_open(QUEUE_NAME, O_RDONLY);
+    if (mq == (mqd_t)-1) {
+        perror("mq_open");
+        exit(1);
     }
 
-    std::string line;
-    std::unordered_map<size_t, std::vector<std::string>> hashTable;
+    std::vector<size_t> local_buffers;
+    std::unordered_map<size_t, char*> hashKeyMapping;
     auto start_reading = std::chrono::high_resolution_clock::now(); 
 
-    while (getline(file, line)) {
-        uint32_t hashKey = MurmurHash3_32(line.data(), line.length(), 0);
-        hashKey %= HASH_SIZE;  // Ensure the hash key is within bounds of HASH_SIZE
-        hashTable[hashKey].push_back(line);
+    while (true) {
+        char msg[1024];
+        ssize_t bytes_read = mq_receive(mq, (char*)&msg, 1024, NULL);
+        std::string message(msg, bytes_read);
+        if (bytes_read >= 0) {
+            size_t hashKey = MurmurHash3_32(msg, strlen(msg), 0);
+            hashKeyMapping[hashKey % HASH_SIZE] = strdup(msg); // Note: strdup allocates memory
+            local_buffers.push_back(hashKey);
+        } else {
+            std::cerr << "Error receiving message: " << strerror(errno) << std::endl;
+            continue;
+        }
     }
 
     auto end_reading = std::chrono::high_resolution_clock::now();  // End timing reading and inserting
@@ -73,7 +82,7 @@ int main() {
     file.close();
 
     // Output the results
-    for (const auto& [key, values] : hashTable) {
+    for (const auto& [key, values] : local_buffers) {
         std::cout << "Hash: " << key << std::endl;
         for (const auto& value : values) {
             std::cout << " - " << value << std::endl;
