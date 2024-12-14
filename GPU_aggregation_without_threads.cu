@@ -3,6 +3,7 @@
 #include <cstring>
 #include <unordered_map>
 #include <vector>
+#include <chrono>
 
 #define HASH_SIZE 256
 
@@ -49,20 +50,25 @@ uint32_t MurmurHash3_32(const void* key, size_t len, uint32_t seed) {
 }
 
 int main() {
-    std::ifstream file("input.txt");
+    std::ifstream file("input_datasets.json");
     if (!file.is_open()) {
-        std::cerr << "Unable to open file: input.txt" << "\n";
+        std::cerr << "Unable to open file: input_datasets.json" << "\n";
         return 1;
     }
 
     std::string line;
     std::unordered_map<size_t, std::vector<std::string>> hashTable;
+    auto start_reading = std::chrono::high_resolution_clock::now(); 
 
     while (getline(file, line)) {
         uint32_t hashKey = MurmurHash3_32(line.data(), line.length(), 0);
         hashKey %= HASH_SIZE;  // Ensure the hash key is within bounds of HASH_SIZE
         hashTable[hashKey].push_back(line);
     }
+
+    auto end_reading = std::chrono::high_resolution_clock::now();  // End timing reading and inserting
+    std::chrono::duration<double> elapsed_reading = end_reading - start_reading;  // Calculate elapsed time
+    std::cout << "Time taken for aggregation: " << elapsed_reading.count() << " seconds." << std::endl;
 
     file.close();
 
