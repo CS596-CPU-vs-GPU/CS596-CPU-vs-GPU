@@ -1,6 +1,3 @@
-//
-// Created by Ananya Reddy on 11/24/2024.
-//
 #include <iostream>
 #include <unordered_map>
 #include <filesystem>
