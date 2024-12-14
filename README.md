@@ -78,7 +78,7 @@ The benchmarking data clearly shows the advantages of GPU acceleration in handli
 
 This substantial reduction in processing time illustrates the GPU's ability to handle parallel computations far more effectively than a CPU, particularly when dealing with large volumes of data.
 
-#### Graphical Representation
+#### Graphical Representation of CPU and GPU performance
 
 ![Alt text](graph.png)
 
