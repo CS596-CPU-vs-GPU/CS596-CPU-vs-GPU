@@ -7,6 +7,7 @@
 #include <mqueue.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <chrono> 
 
 #define QUEUE_NAME  "/my_queue"
 #define NUM_THREADS 4
@@ -77,12 +78,17 @@ void producer_thread_func(mqd_t mq, int thread_id) {
 
 void aggregation_thread_func() {
     while (processing_active) {
+        auto start = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < NUM_THREADS; ++i) {
             for (size_t hashKey : local_buffers[i]) {
                 std::cout << "Aggregated Hash: " << hashKey << std::endl;
             }
             local_buffers[i].clear();
         }
+
+        auto end = std::chrono::high_resolution_clock::now();  
+        std::chrono::duration<double> elapsed = end - start;
+        std::cout << "Aggregation time: " << elapsed.count() << " seconds." << std::endl;
     }
 }
 
